@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IdentityUsers.Areas.Identity.Data;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("IdentityUsersContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityUsersContextConnection' not found.");
 
@@ -10,8 +13,20 @@ builder.Services.AddDbContext<IdentityUsersContext>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<IdentityUsersContext>()
                 .AddDefaultUI()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddErrorDescriber<ErrorsValidationUser>();
 
+builder.Services.Configure<IdentityOptions>(op =>
+{
+    op.Password.RequireDigit = true;
+    op.Password.RequiredLength = builder.Configuration.GetValue<int>("Pass:MinLenght");
+
+    op.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    op.Lockout.MaxFailedAccessAttempts = 5;
+    op.Lockout.AllowedForNewUsers = true;
+
+}
+);
 builder.Services.AddRazorPages();
 
 //keep the exising code
