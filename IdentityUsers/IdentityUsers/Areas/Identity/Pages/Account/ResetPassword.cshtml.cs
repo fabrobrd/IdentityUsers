@@ -41,7 +41,7 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "El campo {0} es requerido")]
             [EmailAddress]
             public string Email { get; set; }
 
@@ -49,8 +49,8 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "El campo {0} es requerido")]
+            [StringLength(100, ErrorMessage = "El {0} debe tener al menos {2} y máximo {1} caracteres de longitud.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -59,8 +59,8 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Confirme el password")]
+            [Compare("Password", ErrorMessage = "El password y la confirmación del password no coinciden.")]
             public string ConfirmPassword { get; set; }
 
             /// <summary>

@@ -6,8 +6,12 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("IdentityUsersContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityUsersContextConnection' not found.");
+var connectionStringClaims = builder.Configuration.GetConnectionString("ClaimsContextConnection") ?? throw new InvalidOperationException("Connection string 'ClaimsContextConnection' not found.");
 
 builder.Services.AddDbContext<IdentityUsersContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<ClaimContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

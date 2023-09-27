@@ -1,0 +1,75 @@
+﻿@page
+@model ClaimsModel;
+@{
+    ViewData["Title"] = "Claims Entity";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class ="col-md-8">
+        <table class="table table-bordered table-hover table-striped" id="UsersTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        Claim
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ClaimsPropierties.Count != null)
+                {
+                    @foreach (var item in Model.ClaimsPropierties)
+                    {
+                        <tr>
+                            <td>
+                                @item.ClaimName
+                            </td>
+                            <td>
+                                @item.ClaimValue
+                            </td>
+                            <td>
+                                <a class="btn btn-success bi bi-person-lines-fill" asp-area="Identity" asp-page-handler="get" asp-route-id="@item.Id" asp-page="/Account/UsersEdit"></a>
+                                <a class="btn btn-primary" asp-area="Identity" asp-page-handler="get" asp-route-id="@item.Id" asp-page="/Account/ChangePassAdmin">Cambiar Pass</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-md-12">
+        <br />
+    </div>
+    <!--    <div class="col-md-12">-->
+        <div class="col-md-5">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new value for a claim.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Input.ClaimName" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.ClaimName"></label>
+                <span asp-validation-for="Input.ClaimName" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.ClaimValue" class="form-control" autocomplete="new-value" aria-required="true" />
+                <label asp-for="Input.ClaimValue"></label>
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+            <button id="saveSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+
+
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

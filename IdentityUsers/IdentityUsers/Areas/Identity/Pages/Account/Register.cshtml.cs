@@ -85,7 +85,7 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required(ErrorMessage = "El campo {0} es requerido")]
-            [StringLength(100, ErrorMessage = "El {0} debe tener al menos {2} y como máximo {1} caracteres de largo.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "El {0} debe tener al menos {2} y máximo {1} caracteres de largo.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -95,8 +95,8 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirme password")]
-            [Compare("Password", ErrorMessage = "El password y la confirmación del password coinciden.")]
+            [Display(Name = "Confirme el password")]
+            [Compare("Password", ErrorMessage = "El password y la confirmacion del password no coinciden.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -132,8 +132,8 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirme su email",
+                        $"Confirme su cuenta <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>haciendo clik aquí</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
