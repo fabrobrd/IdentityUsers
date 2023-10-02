@@ -39,12 +39,11 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
         public string ReturnUrl { get; set; }
-        public IList<InputModel> ClaimsPropierties { get; set; }
+        public IList<ViewModel> ClaimsPropierties { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public class InputModel
         {
-            public int Id { get; set; }
 
             [Required(ErrorMessage = "El campo {0} es requerido")]
             [Display(Name = "Nombre")]
@@ -54,21 +53,24 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             [Display(Name = "Valor")]
             public string ClaimValue { get; set; }
         }
+        public class ViewModel:InputModel
+        {
+            public int Id { get; set; }
+
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             IList<ClaimEntity> claims = await GetAllClaimsActive();
-            //            List<InputModel> inputModels = new List<InputModel>();
-            ClaimsPropierties = new List<InputModel>();
+            ClaimsPropierties = new List<ViewModel>();
             foreach (var items in claims.OrderBy(x => x.Name))
             {
-                var list = new InputModel();
+                var list = new ViewModel();
                 list.Id = items.Id;
                 list.ClaimName = items.Name;
                 list.ClaimValue = items.Value;
                 ClaimsPropierties.Add(list);
-                //                inputModels.Add(list);
             }
         }
 
