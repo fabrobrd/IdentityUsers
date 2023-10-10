@@ -33,8 +33,8 @@
                                 @item.ClaimValue
                             </td>
                             <td>
-                                <a class="btn btn-success bi bi-person-lines-fill" asp-area="Identity" asp-page-handler="get" asp-route-id="@item.Id" asp-page="/Account/UsersEdit"></a>
-                                <a class="btn btn-primary" asp-area="Identity" asp-page-handler="get" asp-route-id="@item.Id" asp-page="/Account/ChangePassAdmin">Cambiar Pass</a>
+                                <a class="btn btn-danger" asp-area="Identity" asp-page-handler="delete" asp-route-id="@item.Id" asp-page="/Account/Claims">Eliminar</a>
+                                <a class="btn btn-primary" asp-area="Identity" asp-page-handler="put" asp-route-id="@item.Id" asp-page="/Account/Claims">Modificar</a>
                             </td>
                         </tr>
                     }
