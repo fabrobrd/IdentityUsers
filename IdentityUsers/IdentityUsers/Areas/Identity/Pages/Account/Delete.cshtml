@@ -1,0 +1,41 @@
+﻿@page
+@model IdentityUsers.Areas.Identity.Pages.Account.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ClaimEntity</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClaimEntity.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClaimEntity.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClaimEntity.Value)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClaimEntity.Value)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClaimEntity.Active)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClaimEntity.Active)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="ClaimEntity.Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

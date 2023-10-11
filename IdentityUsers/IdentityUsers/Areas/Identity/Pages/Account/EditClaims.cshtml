@@ -1,0 +1,44 @@
+﻿@page
+@model IdentityUsers.Areas.Identity.Pages.Account.EditModel
+
+@{
+    ViewData["Title"] = "Modificar claims";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Modificar</h1>
+
+<h4>Claim</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Input.Id" />
+            <div class="form-group">
+                <label asp-for="Input.ClaimName" class="control-label"></label>
+                <input asp-for="Input.ClaimName" class="form-control" />
+                <span asp-validation-for="Input.ClaimName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimValue" class="control-label"></label>
+                <input asp-for="Input.ClaimValue" class="form-control" />
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Input.Active" /> @Html.DisplayNameFor(model => model.Input.Active)
+                </label>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Grabar" class="btn btn-success" />
+                <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Claims">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

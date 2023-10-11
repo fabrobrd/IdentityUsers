@@ -59,6 +59,7 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
         public class ViewModel:InputModel
         {
             public int Id { get; set; }
+            public bool Active { get; set; }
 
         }
 
