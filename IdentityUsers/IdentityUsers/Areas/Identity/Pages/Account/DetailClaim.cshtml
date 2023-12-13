@@ -1,0 +1,149 @@
+﻿@page
+@model IdentityUsers.Areas.Identity.Pages.Account.DetailsModel
+
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Detalle del claim</h1>
+
+@Html.AntiForgeryToken()
+@Html.HiddenFor(m=> m.ClaimEntity.Id)
+<input type="hidden" value="@Model.ClaimEntity.Id" id="ClaimEntityId" />
+
+<div>
+    <h4>Claim</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.modelClaim.ClaimName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.modelClaim.ClaimName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.modelClaim.ClaimValue)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.modelClaim.ClaimValue)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.modelClaim.Active)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.modelClaim.Active)
+        </dd>
+    </dl>
+
+    cantidad de touserlist = @Model.toUsersList.Count();
+    cantidad de listofusers = @Model.listOfUsers.Count();
+     <div id="ListofClaims">
+        <table class="table table-bordered table-hover table-striped" id="UsersTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        Usuarios que lo utilizan
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>                
+                @foreach (var userClaims in Model.toUsersList)
+                {
+                    <tr>
+                        <td>
+                            @userClaims.UserName
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" asp-area="Identity" asp-page-handler="delete" asp-route-id="@userClaims.UserId" asp-page="/Account/DetailClaim">Quitar usuario</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <table class="table table-bordered table-hover table-striped" id="UsersTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        Usuarios para agregar
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var userAll in Model.listOfUsers)
+                {
+                    <tr>
+                        <td>
+                            @userAll.UserName
+                        </td>
+                        <td>
+                            <input type="hidden" value="@userAll.UserId" id="hiddenUser" />
+                            <a class="btn btn-success" id="AggregateButton">Agregar usuario</a>
+                           <!-- <a class="btn btn-success" id="AggregateButton" asp-area="Identity" asp-page-handler="AddUser" asp-route-id="@userAll.UserId" asp-route-claimId="@Model.ClaimEntity.Id" asp-page="/Account/DetailClaim">Agregar usuario</a>-->
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<div>
+    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Claims">Volver</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+
+        $(function () {
+            $(document).ready(function () {
+
+                $('#AggregateButton').on('click', function (e) { 
+                    e.preventDefault();
+                    let url = "?handler=ShowUsersClaim";
+                    let _idclaim = $('#ClaimEntityId').val();
+                    let _uservalue = $('#hiddenUser').val();
+                    let _data = {idclaim: _idclaim, uservalue: _uservalue }
+                    console.log(_data);
+                    $.ajax({
+                        type: 'POST',
+                        url: '?handler=ShowUsersClaim',
+                        data: _data,
+                        beforeSend: function (xhr) {
+                            // Required for POST, but have same issue if I removed this
+                            // and use GET
+                            xhr.setRequestHeader('XSRF-TOKEN',
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        },
+                        success: function (result) {
+                             $("#ListofClaims").html(result);
+                        },
+                        fauilure: function (response) {
+                            alert(response.responseText);
+                        },
+                        error: function (status, ex) {
+                            alert("Error Code: Status: " + status + " Ex: " + ex);
+                        }
+                    });
+
+/*
+                    $.post(url, data).done(function (result){
+                        $("#ListofClaims").html(result);
+                    }
+                ).fail(function (xhr, status, error) {
+                    $("#ErrorAlert").show("slow").delay(2000).hide("slow");
+                })
+                */
+
+                }
+                )
+            })
+        })
+    </Script>
+}

@@ -20,6 +20,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
                 .AddDefaultTokenProviders()
                 .AddErrorDescriber<ErrorsValidationUser>();
 
+builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
 builder.Services.Configure<IdentityOptions>(op =>
 {
     op.Password.RequireDigit = true;

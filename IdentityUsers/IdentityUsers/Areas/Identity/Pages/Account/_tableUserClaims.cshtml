@@ -1,0 +1,53 @@
+﻿@page
+@model IdentityUsers.Areas.Identity.Pages.Account.DetailsModel
+
+<table class="table table-bordered table-hover table-striped" id="UsersTable">
+    <thead class="table-dark">
+        <tr>
+            <th>
+                Usuarios que lo utilizan
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userClaims in Model.toUsersList)
+        {
+            <tr>
+                <td>
+                    @userClaims.UserName
+                </td>
+                <td>
+                    <a class="btn btn-danger" asp-area="Identity" asp-page-handler="delete" asp-route-id="@userClaims.UserId" asp-page="/Account/DetailClaim">Quitar usuario</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    </div>
+<div>
+    <table class="table table-bordered table-hover table-striped" id="UsersTable">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    Usuarios para agregar
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userAll in Model.listOfUsers)
+            {
+                <tr>
+                    <td>
+                        @userAll.UserName
+                    </td>
+                    <td>
+                        <a class="btn btn-success" asp-area="Identity" asp-page-handler="AddUser" asp-route-id="@userAll.UserId" asp-route-claimId="@Model.modelUsers.idClaim" asp-page="/Account/DetailClaim">Agregar usuario</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

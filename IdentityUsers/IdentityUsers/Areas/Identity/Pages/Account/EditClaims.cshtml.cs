@@ -9,16 +9,20 @@ using Microsoft.EntityFrameworkCore;
 using IdentityUsers.Areas.Identity.Data;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace IdentityUsers.Areas.Identity.Pages.Account
 {
     public class EditModel : PageModel
     {
         private readonly IdentityUsers.Areas.Identity.Data.ClaimContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(IdentityUsers.Areas.Identity.Data.ClaimContext context)
+        public EditModel(IdentityUsers.Areas.Identity.Data.ClaimContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -82,27 +86,47 @@ namespace IdentityUsers.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("/Account/Claims");                
             }
+            ClaimEntity claimUpdated = await _context.ClaimsEntity.FindAsync(Input.Id);
+            bool searchClaim = await checkIfTheClaimIsUsed(claimUpdated.Name);
 
-            _context.Attach(ClaimEntity).State = EntityState.Modified;
+            if (searchClaim)
+            {
+                claimUpdated.Name = Input.ClaimName;
+                claimUpdated.Value = Input.ClaimValue;
+                claimUpdated.Active = Input.Active;
+                _context.ClaimsEntity.Update(claimUpdated);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClaimEntityExists(ClaimEntity.Id))
+                try
                 {
-                    return NotFound();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ClaimEntityExists(ClaimEntity.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
             return RedirectToPage("/Account/Claims");
         }
+        protected async Task<bool> checkIfTheClaimIsUsed(string claimName)
+        {
+
+            Claim claim = new Claim(claimName, "");
+            var result = await _userManager.GetUsersForClaimAsync(claim);
+            if (result.Any())
+            {
+                throw new InvalidOperationException("No se puede editar el CLAIM, hay usuarios utilizándolo");
+            }
+            return true;
+        }
+
         private bool ClaimEntityExists(int id)
         {
           return (_context.ClaimsEntity?.Any(e => e.Id == id)).GetValueOrDefault();
